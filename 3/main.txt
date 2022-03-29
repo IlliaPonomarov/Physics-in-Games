@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include "GL/glut.h"
+#include "GL/glu.h"
+
+void calculation(float* y0, float* vy0);
+void enterData(float* y0, float* vy0);
+void write(float* y0, float* vy0, float* time);
+void read(float* y0, float* vy0);
+
+
+int main(int argc, char** argv) {
+
+    float y0, vy0;
+
+    enterData(&y0, &vy0);
+    calculation(&y0, &vy0);
+
+    return 0;
+}
+
+void enterData(float* y0, float* vy0){
+    printf("Enter y0: ");
+    scanf("%f", &(*y0));
+
+    printf("Enter vy0: ");
+    scanf("%f", &(*vy0));
+}
+void calculation(float* y0, float* vy0){
+
+    float time = 0.0;
+    printf("%.2f %.2f", *y0, *vy0);
+
+    if (y0 >= 0 && vy0 > 0){
+        while (*(vy0) > 0){
+            *(vy0) -=0.1;
+            *(y0) += 0.1;
+            time = (*y0) / (*vy0) ;
+            write(&(*y0), &(*vy0), &time);
+            printf("\ny0: %.2f\tvy0: %.2f\ttime: %.2f m/s\n", *y0, *vy0, time);
+        }
+    } else if (y0 == 0 && vy0 > 0){}
+}
+void write(float* y0, float* vy0, float* time){
+    FILE* file = NULL;
+    char* filename = "C:\\Users\\hp\\CLionProjects\\untitled2\\cmake-build-debug\\text.txt";
+    float array[3];
+
+    file = fopen(filename, "a+");
+
+    array[0] = *y0;
+    array[1] = *vy0;
+    array[2] = *time;
+
+    for (int i = 0; i < 3; ++i)
+        fprintf(file, "%.2f\t", array[i]);
+    fprintf(file, "\n");
+
+    fclose(file);
+
+}
